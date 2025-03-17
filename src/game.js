@@ -8,6 +8,7 @@ function App() {
   const [revealed, setRevealed] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
   const canvasRef = useRef(null);
 
   // Load a random card
@@ -29,6 +30,30 @@ function App() {
       alert("Failed to load card. Please try again.");
     }
     setLoading(false);
+  }
+
+  // Fetch card name suggestions from Scryfall
+  async function handleInputChange(e) {
+    const value = e.target.value;
+    setGuess(value);
+
+    if (value.length < 3) {
+      setSuggestions([]); // Don't fetch if input is too short
+      return;
+    }
+
+    try {
+      const response = await fetch(`https://api.scryfall.com/cards/autocomplete?q=${value}`);
+      const data = await response.json();
+      setSuggestions(data.data || []); // Update state with suggestions
+    } catch (error) {
+      console.error("Error fetching card suggestions:", error);
+    }
+  }
+
+  function selectSuggestion(card) {
+    setGuess(card);
+    setSuggestions([]); // Hide dropdown after selection
   }
 
   // Handle drawing the card image
@@ -59,20 +84,21 @@ function App() {
     e.preventDefault();
     if (!guess.trim()) return;
 
-    const newGuessCount = guesses + 1;
-    setGuesses(newGuessCount);
+    setGuesses((prev) => prev + 1);
 
     if (guess.toLowerCase() === card.name.toLowerCase()) {
       setGameOver(true);
       setRevealed(10);
-      alert(`Correct! You Abused Magic in ${newGuessCount} tries!`);
+      alert(`Correct! You guessed the card in ${guesses + 1} tries!`);
     } else {
-      const newRevealed = Math.min(revealed + 1, 10);
-      setRevealed(newRevealed);
-      if (newRevealed === 10) {
-        setGameOver(true);
-        alert(`Game Over! The card was ${card.name}`);
-      }
+      setRevealed((prev) => {
+        const newRevealed = Math.min(prev + 1, 10);
+        if (newRevealed === 10) {
+          setGameOver(true);
+          alert(`Game Over! The card was ${card.name}`);
+        }
+        return newRevealed;
+      });
     }
     setGuess('');
   }
@@ -107,19 +133,26 @@ function App() {
               <input
                 type="text"
                 value={guess}
-                onChange={(e) => setGuess(e.target.value)}
-                placeholder="Enter card name...Nyx Weaver?"
+                onChange={handleInputChange}
+                placeholder="Enter card name..."
               />
-              <button type="submit">
-                Guess ({guesses})
-              </button>
+
+              {suggestions.length > 0 && (
+                <ul className="dropdown">
+                  {suggestions.map((card) => (
+                    <li key={card} onClick={() => selectSuggestion(card)}>
+                      {card}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              
+              <button type="submit">Guess ({guesses})</button>
             </form>
           ) : (
             <div className="game-over">
               <p>The card was: <strong>{card.name}</strong></p>
-              <button onClick={loadNewCard}>
-                Play Again
-              </button>
+              <button onClick={loadNewCard}>Play Again</button>
             </div>
           )}
         </div>
