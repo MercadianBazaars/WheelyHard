@@ -91,25 +91,24 @@ ul {
   color: #666;
   line-height: 1.6;
 }
-/* Patreon Button */
-.patreon-button {
-  display: block;
+.patreon-container {
   text-align: center;
+  margin-top: 20px;
+}
+
+.patreon-button {
   background: #ff424d;
   color: white;
   font-size: 18px;
-  font-weight: bold;
-  padding: 12px 20px;
-  border-radius: 8px;
+  padding: 10px 20px;
+  border-radius: 5px;
   text-decoration: none;
-  margin: 20px auto;
-  width: fit-content;
-  transition: background 0.2s, transform 0.2s;
+  font-weight: bold;
+  transition: background 0.2s;
 }
 
 .patreon-button:hover {
-  background: #d7353f;
-  transform: scale(1.05);
+  background: #d13642;
 }
 /* Canvas styles */
 canvas {
