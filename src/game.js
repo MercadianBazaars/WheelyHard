@@ -16,8 +16,8 @@ function App() {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://api.scryfall.com/cards/random?q=is:hires+has:art_crop"
-      );
+  "https://api.scryfall.com/cards/random?q=is:hires+has:art_crop+set<dmu"
+);
       const data = await response.json();
       setCard({
         name: data.name,
