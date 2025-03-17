@@ -65,7 +65,7 @@ function App() {
     if (guess.toLowerCase() === card.name.toLowerCase()) {
       setGameOver(true);
       setRevealed(10);
-      alert(`Correct! You guessed it in ${newGuessCount} tries!`);
+      alert(`Correct! You Abused Magic in ${newGuessCount} tries!`);
     } else {
       const newRevealed = Math.min(revealed + 1, 10);
       setRevealed(newRevealed);
@@ -83,7 +83,7 @@ function App() {
 
   return (
     <div className="container">
-      <h1 className="title">MTG Art Guesser</h1>
+      <h1 className="title">Wheely Hard</h1>
       
       {!card ? (
         <div className="card">
@@ -108,7 +108,7 @@ function App() {
                 type="text"
                 value={guess}
                 onChange={(e) => setGuess(e.target.value)}
-                placeholder="Enter card name..."
+                placeholder="Enter card name...Nyx Weaver?"
               />
               <button type="submit">
                 Guess ({guesses})
